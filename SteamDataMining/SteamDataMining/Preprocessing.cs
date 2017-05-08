@@ -20,11 +20,11 @@ namespace SteamDataMining
             foreach (var item in items)
                 tagList.AddRange(item.Value.tags.Keys.Where(tag => !tagList.Contains(tag)));
 
-            data = items.Select(item => ConvertItem(item.Value)).ToArray();
+            data = items.Select(item => ConvertItem(item.Value, tagList)).ToArray();
             tags = tagList.ToArray();
         }
 
-        public static DataItem ConvertItem(Item item)
+        public static DataItem ConvertItem(Item item, List<string> tagList)
         {
             return new DataItem
             {
@@ -34,7 +34,8 @@ namespace SteamDataMining
                 owners = item.owners,
                 players = item.players_forever,
                 price = item.price,
-                tags = item.tags
+                tags = item.tags,
+                ntags = item.tags.ToDictionary(tag => tagList.IndexOf(tag.Key), tag => tag.Value)
             };
         }
 

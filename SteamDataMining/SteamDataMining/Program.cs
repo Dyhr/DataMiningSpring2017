@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SteamDataMining
 {
@@ -17,6 +12,9 @@ namespace SteamDataMining
 
             Console.WriteLine("Number of items: " + data.Length);
             Console.WriteLine("Number of tags: " + tags.Length);
+
+            var map = new Map(tags.Length, 64, data);
+            map.DumpCoordinates();
         }
     }
 }
