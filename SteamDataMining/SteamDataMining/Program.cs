@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SteamDataMining
 {
@@ -6,22 +8,25 @@ namespace SteamDataMining
     {
         static void Main(string[] args)
         {
-            var testItems = new List<string[]>();
 
-            testItems.Add( new string[] { "RPG", "FPS", "FUNNY"});
-            testItems.Add(new string[] { "ACTION", "FPS", "SERIOUS" });
-            testItems.Add(new string[] { "ACTION", "RPG", "FUNNY" });
-            testItems.Add(new string[] { "RPG", "FPS", "FUNNY", "BEAUTIFUL" });
-            testItems.Add(new string[] { "ACTION", "RPG", "FUNNY" });
-            testItems.Add(new string[] { "ACTION", "RPG", "SERIOUS" });
-            testItems.Add(new string[] { "ACTION", "RPG", "FUNNY","SHORT" });
-            testItems.Add(new string[] { "ACTION", "RPG", "FUNNY" });
-            testItems.Add(new string[] { "ACTION", "RPG", "FUNNY" });
-            testItems.Add(new string[] { "FPS", "ACTION", "SERIOUS","BEAUTIFUL" });
-            testItems.Add(new string[] { "ADVENTURE", "RPG", "SHORT" });
+            // --------     DATA PROCESSING         ---------
+
+            DataItem[] data;
+            string[] tags;
+            Preprocessing.ReadJson("data.json", out data, out tags);
+
+            Console.WriteLine("Number of items: " + data.Length);
+            Console.WriteLine("Number of tags: " + tags.Length);
+
+            // --------     SELF-ORGANIZING MAPS    ---------
+
+            //var map = new Map(tags.Length, 64, data);
+            //map.DumpCoordinates();
             
 
-            var result = Apriori.MineItemSets(testItems, 3);
+
+            // ---------    APRIORI MINING          ----------
+            var result = Apriori.MineItemSets(data.Select(x=>x.tags.Keys.ToArray()).ToList(), 50);
 
             Console.WriteLine("Supported sets found:");
             foreach (var set in result)
@@ -32,17 +37,7 @@ namespace SteamDataMining
                 }
                 Console.WriteLine(";");
             }
-
-            Console.ReadLine();
-            DataItem[] data;
-            string[] tags;
-            Preprocessing.ReadJson("data.json", out data, out tags);
-
-            Console.WriteLine("Number of items: " + data.Length);
-            Console.WriteLine("Number of tags: " + tags.Length);
-
-            var map = new Map(tags.Length, 64, data);
-            map.DumpCoordinates();
+            
         }
     }
 }
