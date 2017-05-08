@@ -18,7 +18,9 @@ namespace SteamDataMining
             double pct = 100 * supportThreshold / data.Count;
 
             Dictionary<HashSet<string>, int> frequentItemSets = generateFrequentItemSetsLevel1(data, supportThreshold);
-            
+
+            Console.WriteLine("Found " + frequentItemSets.Count + " supported length 1 patterns");
+
             for (k = 1; frequentItemSets.Count > 0; k++)
             {
                 
