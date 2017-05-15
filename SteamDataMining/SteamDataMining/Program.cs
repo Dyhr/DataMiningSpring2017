@@ -27,7 +27,7 @@ namespace SteamDataMining
 
             Console.WriteLine("Number of items: " + data.Length);
             Console.WriteLine("Number of tags: " + tags.Length);
-            
+
 
             // --------     SELF-ORGANIZING MAPS    ---------
 
@@ -75,11 +75,11 @@ namespace SteamDataMining
             while (threshold > 0.01)
             {
                 var result = Apriori.MineItemSets(data.Select(x => x.tags.Keys.ToArray()).ToList(), threshold, 3);
-                
+
                 var resultMappedToRating = result.ToDictionary(r => SetAsString(r),
                     r => getAverage(data.Where(x => r.All(x.tags.Keys.Contains)))); //.Average(d => d.rank));
 
-                
+
                 var xs =
                     result.Select(
                         r =>
@@ -96,8 +96,21 @@ namespace SteamDataMining
                 WriteXML(xs,
                     @"c:\temp\th" + threshold.ToString() + ".xml");
                 threshold -= 0.01;
-                
+
             }
+
+            //AVERAGE RATINGS PR TAG
+            var tagRatings = tags.Select(r => new ResultItem()
+            {
+                rating = getAverage(data.Where(x => x.tags.Keys.Contains(r))),
+                median = getMedian(data.Where(x => x.tags.Keys.Contains(r))),
+                tags = r
+            }).ToList();
+
+            tagRatings.Sort((kv, kv2) => kv.rating.CompareTo(kv2.rating));
+
+            WriteXML(tagRatings,
+                @"c:\temp\tagRatings.xml");
 
             Console.ReadLine();
         }
