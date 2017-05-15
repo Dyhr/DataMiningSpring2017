@@ -9,7 +9,7 @@ namespace SteamDataMining
 {
     class Apriori
     {
-        public static List<HashSet<string>> MineItemSets(List<string[]> data, int supportThreshold)
+        public static List<HashSet<string>> MineItemSets(List<string[]> data, int supportThreshold, int minimumPrintSize)
         {
             Console.WriteLine("Running Apriori using support threshold " + supportThreshold);
             int k;
@@ -23,7 +23,7 @@ namespace SteamDataMining
 
             for (k = 1; frequentItemSets.Count > 0; k++)
             {
-                
+
                 supportedCandidates = new List<HashSet<string>>(frequentItemSets.Keys);
 
                 Console.WriteLine("Finding frequent itemsets of length " + (k + 1) + " ...");
@@ -31,6 +31,16 @@ namespace SteamDataMining
 
 
                 Console.WriteLine(" found " + frequentItemSets.Count);
+
+                if (k + 1 >= minimumPrintSize)
+                    foreach (var set in frequentItemSets.Keys)
+                    {
+                        foreach (var item in set)
+                        {
+                            Console.Write(item + " ");
+                        }
+                        Console.WriteLine(";");
+                    }
             }
 
             return supportedCandidates;
@@ -52,16 +62,17 @@ namespace SteamDataMining
 
 
                         if (newSet.Count == itemSet1.Count + 1) // if they had k-1 elements in common
-                            if(!candidates.Any(c => newSet.All(s=>c.Key.Contains(s))))
+                            if (!candidates.Any(c => newSet.All(s => c.Key.Contains(s))))
                                 candidates[newSet] = 0;
                     }
                 }
             }
+            Console.WriteLine("generated " + candidates.Count + " candidates.");
 
             //check the support for all candidates and returns only those that have enough support to the set
             return candidates.ToDictionary(kv => kv.Key, kv => countSupport(kv.Key, data)).Where(c => c.Value >= supportThreshold).ToDictionary(kv => kv.Key, kv => kv.Value);
         }
-        
+
         private static HashSet<string> joinSets(HashSet<string> first, HashSet<string> second)
         {
             var items = new HashSet<string>();
@@ -93,8 +104,8 @@ namespace SteamDataMining
                     }
                 }
             }
-            
-            return returnTable.Where(n => n.Value >= supportThreshold).ToDictionary(kv => new HashSet<string>() { kv.Key},kv => kv.Value);
+
+            return returnTable.Where(n => n.Value >= supportThreshold).ToDictionary(kv => new HashSet<string>() { kv.Key }, kv => kv.Value);
         }
 
         //returns how many tuples in our data set, that contains all items of the given set.
