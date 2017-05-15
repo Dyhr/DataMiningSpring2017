@@ -11,6 +11,7 @@ namespace SteamDataMining
     {
         public string tags;
         public double rating;
+        public int median;
     }
 
     class Program
@@ -66,24 +67,47 @@ namespace SteamDataMining
 
 
             // ---------    APRIORI MINING          ----------
-            var result = Apriori.MineItemSets(data.Select(x=>x.tags.Keys.ToArray()).ToList(), 0.03,3);
+            double threshold = 0.1;
 
-
-            var resultMappedToRating = result.ToDictionary(r => SetAsString(r), r => getAverage(data.Where(x => r.All(x.tags.Keys.Contains))));//.Average(d => d.rank));
-
-            var asList = resultMappedToRating.ToList();
-            asList.Sort((kv, kv2) => kv.Value.CompareTo(kv2.Value));
-
-            WriteXML(asList.Select(a=>new ResultItem() {rating = a.Value,tags = a.Key.ToString()}).ToList(), @"c:\temp\test.xml");
-
-
-            //Console.WriteLine("Supported sets of length "+ result.First().Count+" found:");
-            foreach (var kv in asList)
+            while (threshold > 0.01)
             {
-                Console.WriteLine(kv.Key + " : " + kv.Value);
+                var result = Apriori.MineItemSets(data.Select(x => x.tags.Keys.ToArray()).ToList(), threshold, 3);
+
+
+                var resultMappedToRating = result.ToDictionary(r => SetAsString(r),
+                    r => getAverage(data.Where(x => r.All(x.tags.Keys.Contains)))); //.Average(d => d.rank));
+
+                
+                var xs =
+                    result.Select(
+                        r =>
+                            new ResultItem()
+                            {
+                                rating = getAverage(data.Where(x => r.All(x.tags.Keys.Contains))),
+                                tags = SetAsString(r),
+                                median = getMedian(data.Where(x => r.All(x.tags.Keys.Contains)))
+                            }).ToList();
+
+
+                xs.Sort((kv, kv2) => kv.rating.CompareTo(kv2.rating));
+
+                WriteXML(xs,
+                    @"c:\temp\th" + threshold.ToString() + ".xml");
+                threshold -= 0.01;
+                
             }
 
             Console.ReadLine();
+        }
+
+        //should be sorted before.
+        private static int getMedian(IEnumerable<DataItem> enumerable)
+        {
+            var cs = enumerable.Where(d => d.rank != null).ToList();
+            
+            cs.Sort((d,d1)=>((int)d.rank).CompareTo((int)d1.rank));
+
+            return (int)cs.ElementAt((cs.Count/2)).rank;
         }
 
         private static string SetAsString(SortedSet<string> set)

@@ -9,7 +9,7 @@ namespace SteamDataMining
 {
     public static class Preprocessing
     {
-        public static void ReadJson(string filepath, out DataItem[] data, out string[] tags)
+        public static void ReadJson(string filepath, out DataItem[] data, out string[] tags, bool filterOutliers = false)
         {
             var file = File.ReadAllText(filepath);
             file = file.Replace("[]", "{}");

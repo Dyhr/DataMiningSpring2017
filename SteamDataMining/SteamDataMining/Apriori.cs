@@ -22,16 +22,20 @@ namespace SteamDataMining
 
             Console.WriteLine("Found " + frequentItemSets.Count + " supported length 1 patterns");
 
+            supportedCandidates = new List<SortedSet<string>>();
             for (k = 1; frequentItemSets.Count > 0; k++)
             {
-                supportedCandidates = new List<SortedSet<string>>(frequentItemSets.Keys);
 
                 Console.WriteLine("Finding frequent itemsets of length " + (k + 1) + " ...");
                 frequentItemSets = generateFrequentItemSets(supportCount, data, frequentItemSets);
                 
-                Console.WriteLine(" found " + frequentItemSets.Count);
+                Console.WriteLine(" - found " + frequentItemSets.Count + " supported candidates.");
 
                 if (k + 1 >= minimumPrintSize)
+                {
+
+                    supportedCandidates.AddRange(frequentItemSets.Keys);
+
                     foreach (var set in frequentItemSets.Keys)
                     {
                         foreach (var item in set)
@@ -40,10 +44,19 @@ namespace SteamDataMining
                         }
                         Console.WriteLine(";");
                     }
+                }   
             }
+
+            //RuleGeneration(supportedCandidates,data);
 
             return supportedCandidates;
         }
+
+        private static void RuleGeneration(List<SortedSet<string>> supportedCandidates, List<string[]> data)
+        {
+            throw new NotImplementedException();
+        }
+        
 
         private static Dictionary<SortedSet<string>, int> generateFrequentItemSets(int supportThreshold, List<string[]> data, Dictionary<SortedSet<string>, int> lowerLevelItemSets)
         {
@@ -54,15 +67,30 @@ namespace SteamDataMining
             {
                 foreach (SortedSet<string> itemSet2 in lowerLevelItemSets.Keys)
                 {
-                    if (!itemSet1.Equals(itemSet2) && almostEqual(itemSet1,itemSet2))
+                    if (!itemSet1.All(itemSet2.Contains) && almostEqual(itemSet1,itemSet2)) //not the same and first k-1 elements are equal
                     {
                         SortedSet<string> newSet = joinSets(itemSet1, itemSet2);
 
-
-
                         if (newSet.Count == itemSet1.Count + 1) // if they had k-1 elements in common
-                            if (!candidates.Any(c => newSet.All(s => c.Key.Contains(s))))
-                                candidates[newSet] = 0;
+                        {
+                            int i = 0;
+                            //Pruning
+                            while (i < newSet.Count)
+                            {
+                                var e = newSet.ElementAt(i);
+
+                                SortedSet<string> subset = new SortedSet<string>(newSet.Where(x=> !x.Equals(e)));
+
+                                if(!lowerLevelItemSets.Any(kv=> subset.All(kv.Key.Contains)))
+                                    break;
+                                i++;
+
+                            }
+                            //if all subsets are in the lower level sets
+                            if(i== newSet.Count)
+                                if (!candidates.Any(c => newSet.All(s => c.Key.Contains(s))))
+                                    candidates[newSet] = 0;
+                        }
                     }
                 }
             }
