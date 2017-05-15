@@ -95,10 +95,6 @@ namespace SteamDataMining
                     count++;
                     total += (int)dataItem.rank;
                 }
-                else
-                {
-                    Console.WriteLine("null rank found");
-                }
             }
             return total / count;
         }
