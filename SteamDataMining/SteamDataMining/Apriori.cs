@@ -9,27 +9,26 @@ namespace SteamDataMining
 {
     class Apriori
     {
-        public static List<HashSet<string>> MineItemSets(List<string[]> data, int supportThreshold, int minimumPrintSize)
+        public static List<HashSet<string>> MineItemSets(List<string[]> data, double supportThreshold, int minimumPrintSize)
         {
             Console.WriteLine("Running Apriori using support threshold " + supportThreshold);
             int k;
             List<HashSet<string>> supportedCandidates = new List<HashSet<string>>();
 
-            double pct = 100 * supportThreshold / data.Count;
+            //double pct = 100 * supportThreshold / data.Count;
+            int supportCount = (int) (supportThreshold * data.Count);
 
-            Dictionary<HashSet<string>, int> frequentItemSets = generateFrequentItemSetsLevel1(data, supportThreshold);
+            Dictionary<HashSet<string>, int> frequentItemSets = generateFrequentItemSetsLevel1(data, supportCount);
 
             Console.WriteLine("Found " + frequentItemSets.Count + " supported length 1 patterns");
 
             for (k = 1; frequentItemSets.Count > 0; k++)
             {
-
                 supportedCandidates = new List<HashSet<string>>(frequentItemSets.Keys);
 
                 Console.WriteLine("Finding frequent itemsets of length " + (k + 1) + " ...");
-                frequentItemSets = generateFrequentItemSets(supportThreshold, data, frequentItemSets);
-
-
+                frequentItemSets = generateFrequentItemSets(supportCount, data, frequentItemSets);
+                
                 Console.WriteLine(" found " + frequentItemSets.Count);
 
                 if (k + 1 >= minimumPrintSize)

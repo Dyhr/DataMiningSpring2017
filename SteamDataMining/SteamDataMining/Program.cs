@@ -26,15 +26,21 @@ namespace SteamDataMining
 
 
             // ---------    APRIORI MINING          ----------
-            var result = Apriori.MineItemSets(data.Select(x=>x.tags.Keys.ToArray()).ToList(), 500,3);
+            var result = Apriori.MineItemSets(data.Select(x=>x.tags.Keys.ToArray()).ToList(), 0.03,3);
 
-            Console.WriteLine("Supported sets of length "+ result.First().Count+" found:");
-            foreach (var set in result)
+
+            var resultMappedToRating = result.ToDictionary(r => r, r => data.Where(x => r.All(x.tags.Keys.Contains)).Average(d => d.rank));
+
+            
+
+            //Console.WriteLine("Supported sets of length "+ result.First().Count+" found:");
+            foreach (var set in resultMappedToRating)
             {
-                foreach (var item in set)
+                foreach (var item in set.Key)
                 {
-                    Console.Write(item+ " ");
+                    Console.Write(item + " ");
                 }
+                Console.Write(set.Value);
                 Console.WriteLine(";");
             }
 
