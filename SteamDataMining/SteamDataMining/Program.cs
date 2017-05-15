@@ -38,18 +38,20 @@ namespace SteamDataMining
             {
                 var bitmap = new Bitmap(mapSize, mapSize);
                 var max = 0d;
-                for(int x = 0; x < mapSize; x++) {
-                    for(int y = 0; y < mapSize; y++)
+                for (int x = 0; x < mapSize; x++)
+                {
+                    for (int y = 0; y < mapSize; y++)
                     {
                         var average = resultMap[x, y].Aggregate(0d, (acc, v) => acc + v) / tags.Length;
                         if (average > max) max = average;
                     }
                 }
-                for(int x = 0; x < mapSize; x++) {
-                    for(int y = 0; y < mapSize; y++)
+                for (int x = 0; x < mapSize; x++)
+                {
+                    for (int y = 0; y < mapSize; y++)
                     {
                         var average = resultMap[x, y].Aggregate(0d, (acc, v) => acc + v) / max;
-                        bitmap.SetPixel(x, y, Color.FromArgb((int) (average*255), (int) (average*255), (int) (average*255)));
+                        bitmap.SetPixel(x, y, Color.FromArgb((int)(average * 255), (int)(average * 255), (int)(average * 255)));
                     }
                 }
                 var box = new PictureBox();
@@ -58,15 +60,17 @@ namespace SteamDataMining
 
 
             // ---------    APRIORI MINING          ----------
-            var result = Apriori.MineItemSets(data.Select(x=>x.tags.Keys.ToArray()).ToList(), 0.03,3);
+            var result = Apriori.MineItemSets(data.Select(x=>x.tags.Keys.ToArray()).ToList(), 0.05,3);
 
 
-            var resultMappedToRating = result.ToDictionary(r => r, r => data.Where(x => r.All(x.tags.Keys.Contains)).Average(d => d.rank));
+            var resultMappedToRating = result.ToDictionary(r => r, r => getAverage(data.Where(x => r.All(x.tags.Keys.Contains))));//.Average(d => d.rank));
 
-            
+            var asList = resultMappedToRating.ToList();
+            asList.Sort((kv, kv2) => kv.Value.CompareTo(kv2.Value));
+
 
             //Console.WriteLine("Supported sets of length "+ result.First().Count+" found:");
-            foreach (var set in resultMappedToRating)
+            foreach (var set in asList)
             {
                 foreach (var item in set.Key)
                 {
@@ -78,5 +82,26 @@ namespace SteamDataMining
 
             Console.ReadLine();
         }
+
+        private static double getAverage(IEnumerable<DataItem> enumerable)
+        {
+            double total = 0;
+            int count = 0;
+
+            foreach (var dataItem in enumerable)
+            {
+                if (dataItem.rank != null)
+                {
+                    count++;
+                    total += (int)dataItem.rank;
+                }
+                else
+                {
+                    Console.WriteLine("null rank found");
+                }
+            }
+            return total / count;
+        }
     }
+    
 }
