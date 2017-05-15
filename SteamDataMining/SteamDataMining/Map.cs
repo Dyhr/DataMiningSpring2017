@@ -2,26 +2,38 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms.VisualStyles;
 using SteamDataMining;
 
 public class Map
 {
-    private double[,][] outputs; // Collection of weights.
-    private int iteration; // Current iteration.
-    private int length; // Side length of output grid.
-    private int dimensions; // Number of input dimensions.
+    private double[,][] outputs;
+    private int length;
+    private int dimensions;
+    private int iterations;
+    private double timeConstant;
     private Random rnd = new Random();
 
-    private double nf;
 
     private List<string> labels = new List<string>();
     private List<double[]> patterns = new List<double[]>();
 
-    public Map(int dimensions, int length, DataItem[] data)
+    private double[,,,] distanceCache;
+
+    public Map(int dimensions, int length, int iterations, DataItem[] data)
     {
         this.length = length;
         this.dimensions = dimensions;
-        nf = 1000 / Math.Log(length);
+        this.iterations = iterations;
+        this.timeConstant = iterations / Math.Log(length);
+        //this.distanceCache = new double[length,length,length,length];
+
+        // Cache distances between nodes
+        /*for (int x1 = 0; x1 < length; x1++)
+            for (int y1 = 0; y1 < length; y1++)
+                for (int x2 = 0; x2 < length; x2++)
+                    for (int y2 = 0; y2 < length; y2++)
+                        distanceCache[x1,y1,x2,y2] = Math.Sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));*/
 
         Console.WriteLine("Initialising...");
         Initialise();
@@ -30,7 +42,7 @@ public class Map
         Console.WriteLine("Normalizing...");
         NormalisePatterns();
         Console.WriteLine("Training...");
-        Train(0.001);
+        Train();
     }
 
     private void Initialise()
@@ -73,9 +85,11 @@ public class Map
         }
     }
 
-    private void Train(double maxError)
+    private void Train()
     {
+        double maxError = 0.000001;
         double currentError;
+        int iteration = 0;
         var trainingSet = patterns.OrderBy(_ => rnd.Next());
 
         do
@@ -83,15 +97,18 @@ public class Map
             currentError = 0;
 
             trainingSet = trainingSet.OrderBy(_ => rnd.Next());
+            double learningRate = LearningRate(iteration);
+            double radius = Radius(iteration);
 
             foreach (var item in trainingSet)
-                currentError += TrainPattern(item);
+                currentError += TrainPattern(item, iteration, learningRate, radius);
 
+            iteration++;
             Console.WriteLine(currentError.ToString("0.0000000"));
-        } while (currentError > maxError);
+        } while (currentError > maxError && iteration < iterations);
     }
 
-    private double TrainPattern(double[] pattern)
+    private double TrainPattern(double[] pattern, int it, double learningRate, double radius)
     {
         double error = 0;
         Tuple<int,int> winner = Winner(pattern);
@@ -99,20 +116,12 @@ public class Map
         {
             for (int j = 0; j < length; j++)
             {
-                error += UpdateWeights(pattern, winner.Item1, winner.Item2, i, j, iteration);
+                double dist = NodeDistance(winner.Item1,winner.Item2,i,j);
+                if(dist < radius)
+                    error += UpdateWeights(pattern, i, j, dist, it, learningRate, radius);
             }
         }
-        iteration++;
         return Math.Abs(error / (length * length));
-    }
-
-    public void DumpCoordinates()
-    {
-        for (int i = 0; i < patterns.Count; i++)
-        {
-            Tuple<int, int> n = Winner(patterns[i]);
-            Console.WriteLine("{0},{1},{2}", labels[i], n.Item1, n.Item2);
-        }
     }
 
     public double[,][] ResultMap()
@@ -139,13 +148,13 @@ public class Map
         return winner;
     }
 
-    public double UpdateWeights(double[] pattern, int winX, int winY, int nodeX, int nodeY, int it)
+    public double UpdateWeights(double[] pattern, int x, int y, double dist, int it, double learningRate, double radius)
     {
         double sum = 0;
         for (int i = 0; i < dimensions; i++)
         {
-            double delta = LearningRate(it) * Gauss(winX, winY, nodeX, nodeY, it) * (pattern[i] - outputs[nodeX, nodeY][i]);
-            outputs[nodeX, nodeY][i] += delta;
+            double delta = learningRate * Gauss(dist, radius) * (pattern[i] - outputs[x, y][i]);
+            outputs[x, y][i] += delta;
             sum += delta;
         }
         return sum / dimensions;
@@ -159,21 +168,24 @@ public class Map
         return Math.Sqrt(value);
     }
 
-
-    private double Gauss(int winX, int winY, int nodeX, int nodeY, int it)
+    private double NodeDistance(int x1, int y1, int x2, int y2)
     {
-        double distance = Math.Sqrt((winX - nodeX) * (winX - nodeX) + (winY - nodeY) * (winY - nodeY));
-        return Math.Exp(-(distance * distance) / (Strength(it) * Strength(it)));
+        return Math.Sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
     }
 
-    private double Strength(int it)
+    private double Gauss(double dist, double radius)
     {
-        return Math.Exp(-it / nf) * length;
+        return Math.Exp(-(dist * dist) / (radius * radius));
+    }
+
+    private double Radius(int it)
+    {
+        return Math.Exp(-it / timeConstant) * length;
     }
 
 
     private double LearningRate(int it)
     {
-        return Math.Exp(-it / 1000d) * 0.1;
+        return Math.Exp(-it / (double)iterations) * 0.1; // 0.1 is the starting learning rate
     }
 }
