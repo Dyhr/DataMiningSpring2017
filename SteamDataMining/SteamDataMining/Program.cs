@@ -7,6 +7,12 @@ using System.Windows.Forms;
 
 namespace SteamDataMining
 {
+    public class ResultItem
+    {
+        public string tags;
+        public double rating;
+    }
+
     class Program
     {
         static void Main(string[] args)
@@ -60,27 +66,47 @@ namespace SteamDataMining
 
 
             // ---------    APRIORI MINING          ----------
-            var result = Apriori.MineItemSets(data.Select(x=>x.tags.Keys.ToArray()).ToList(), 0.05,3);
+            var result = Apriori.MineItemSets(data.Select(x=>x.tags.Keys.ToArray()).ToList(), 0.03,3);
 
 
-            var resultMappedToRating = result.ToDictionary(r => r, r => getAverage(data.Where(x => r.All(x.tags.Keys.Contains))));//.Average(d => d.rank));
+            var resultMappedToRating = result.ToDictionary(r => SetAsString(r), r => getAverage(data.Where(x => r.All(x.tags.Keys.Contains))));//.Average(d => d.rank));
 
             var asList = resultMappedToRating.ToList();
             asList.Sort((kv, kv2) => kv.Value.CompareTo(kv2.Value));
 
+            WriteXML(asList.Select(a=>new ResultItem() {rating = a.Value,tags = a.Key.ToString()}).ToList(), @"c:\temp\test.xml");
+
 
             //Console.WriteLine("Supported sets of length "+ result.First().Count+" found:");
-            foreach (var set in asList)
+            foreach (var kv in asList)
             {
-                foreach (var item in set.Key)
-                {
-                    Console.Write(item + " ");
-                }
-                Console.Write(set.Value);
-                Console.WriteLine(";");
+                Console.WriteLine(kv.Key + " : " + kv.Value);
             }
 
             Console.ReadLine();
+        }
+
+        private static string SetAsString(SortedSet<string> set)
+        {
+            var retString = "";
+
+            foreach (var item in set)
+            {
+                retString += (item + " ");
+            }
+            return retString;
+        }
+        
+
+        private static void WriteXML(List<ResultItem> tagsWithRating, string filename)
+        {
+            System.Xml.Serialization.XmlSerializer writer =
+                new System.Xml.Serialization.XmlSerializer(typeof(List<ResultItem>));
+
+            System.IO.StreamWriter file = new System.IO.StreamWriter(
+                filename);
+            writer.Serialize(file, tagsWithRating);
+            file.Close();
         }
 
         private static double getAverage(IEnumerable<DataItem> enumerable)
@@ -98,6 +124,7 @@ namespace SteamDataMining
             }
             return total / count;
         }
+        
     }
     
 }
