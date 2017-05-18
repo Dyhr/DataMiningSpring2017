@@ -260,6 +260,25 @@ namespace SteamDataMining
             this.confidence = c;
         }
 
+        public override int GetHashCode()
+        {
+            int x = 0;
+
+            foreach (var s in remaining)
+            {
+                x += s.GetHashCode();
+            }
+
+            x *= 101;
+
+            foreach (var s in subset)
+            {
+                x += s.GetHashCode();
+            }
+
+            return x;
+        }
+
         public override bool Equals(object obj)
         {
             Rule other = obj as Rule;
