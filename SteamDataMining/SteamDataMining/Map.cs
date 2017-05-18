@@ -16,7 +16,7 @@ public class Map
 
 
     private List<string> labels = new List<string>();
-    private List<double[]> patterns = new List<double[]>();
+    public List<double[]> patterns = new List<double[]>();
 
     private double[,,,] distanceCache;
 
@@ -129,7 +129,7 @@ public class Map
         return outputs;
     }
 
-    private Tuple<int,int> Winner(double[] pattern)
+    public Tuple<int,int> Winner(double[] pattern)
     {
         Tuple<int,int> winner = null;
         double min = double.MaxValue;
