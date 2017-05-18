@@ -1,0 +1,229 @@
+APRIORI ASSOCIATION RULES - Threshold 3%, Confidence 30%
+
+Sci-fi,Singleplayer->Action conf.: 50,00 %
+Indie,Shooter->Action conf.: 50,00 %
+Shooter,Singleplayer->Action conf.: 50,00 %
+Adventure,Shooter->Action conf.: 50,00 %
+FPS,Singleplayer->Action conf.: 50,00 %
+First-Person,FPS->Action conf.: 50,00 %
+FPS,Shooter->Action conf.: 50,00 %
+Action,Simulation->Indie conf.: 50,00 %
+Co-op,Indie->Action conf.: 50,00 %
+Adventure,Co-op,Multiplayer->Action conf.: 50,00 %
+Action,Adventure,Co-op->Multiplayer conf.: 50,00 %
+Action,RPG->Adventure conf.: 50,00 %
+Adventure,Multiplayer,Singleplayer->Action conf.: 50,00 %
+Multiplayer,Shooter->Action conf.: 50,00 %
+FPS,Multiplayer->Action conf.: 50,00 %
+Co-op,Multiplayer->Action conf.: 50,00 %
+Casual,Strategy->Indie conf.: 50,00 %
+Action,RPG,Singleplayer->Adventure conf.: 50,00 %
+RPG,Strategy->Indie conf.: 50,00 %
+Action,Indie,RPG->Adventure conf.: 50,00 %
+Adventure,Open World,Singleplayer->Action conf.: 50,00 %
+VR Only->VR conf.: 50,00 %
+Action,Adventure,Open World->Singleplayer conf.: 50,00 %
+Action,Open World,Singleplayer->Adventure conf.: 50,00 %
+Action,Co-op,Singleplayer->Multiplayer conf.: 50,00 %
+Pixel Graphics->Indie conf.: 50,00 %
+Early Access,Indie->Action conf.: 50,00 %
+Action,Horror->Adventure conf.: 50,00 %
+Horror,Indie->Adventure conf.: 50,00 %
+Adventure,Pixel Graphics->Indie conf.: 50,00 %
+Adventure,Great Soundtrack->Singleplayer conf.: 50,00 %
+Adventure,Atmospheric->Singleplayer conf.: 50,00 %
+Atmospheric,Singleplayer->Adventure conf.: 50,00 %
+Atmospheric,Great Soundtrack->Adventure conf.: 50,00 %
+Atmospheric,Story Rich->Adventure conf.: 50,00 %
+Casual,Simulation->Indie conf.: 50,00 %
+Adventure,Simulation->Indie conf.: 50,00 %
+Atmospheric,Great Soundtrack->Singleplayer conf.: 50,00 %
+Atmospheric,Story Rich->Singleplayer conf.: 50,00 %
+Great Soundtrack,Story Rich->Singleplayer conf.: 50,00 %
+2D,Singleplayer->Indie conf.: 50,00 %
+Casual,Puzzle->Indie conf.: 50,00 %
+Action,Pixel Graphics->Indie conf.: 50,00 %
+2D,Great Soundtrack->Indie conf.: 50,00 %
+Action,Great Soundtrack->Singleplayer conf.: 50,00 %
+Action,Third Person->Singleplayer conf.: 50,00 %
+Singleplayer,Third Person->Action conf.: 50,00 %
+Action,Sci-fi->Singleplayer conf.: 50,00 %
+2D,Adventure,Singleplayer->Indie conf.: 50,00 %
+2D,Pixel Graphics->Indie conf.: 50,00 %
+Co-op,Multiplayer,Singleplayer->Action conf.: 50,00 %
+Action,Early Access->Indie conf.: 50,00 %
+Action,Adventure,Atmospheric->Singleplayer conf.: 50,00 %
+Indie,Story Rich->Adventure conf.: 50,00 %
+Action,Atmospheric,Singleplayer->Adventure conf.: 50,00 %
+Early Access->Action conf.: 50,00 %
+2D,Action,Singleplayer->Indie conf.: 50,00 %
+2D,Adventure,Indie->Singleplayer conf.: 50,00 %
+Adventure,Great Soundtrack,Indie->Singleplayer conf.: 50,00 %
+Exploration->Adventure conf.: 50,00 %
+Point & Click->Adventure conf.: 50,00 %
+Adventure,Singleplayer,Story Rich->Atmospheric conf.: 50,00 %
+Shooter->Action conf.: 50,00 %
+Action,Great Soundtrack,Indie->Singleplayer conf.: 50,00 %
+Gore->Action conf.: 50,00 %
+FPS->Action conf.: 50,00 %
+Adventure,Atmospheric,Story Rich->Singleplayer conf.: 50,00 %
+Atmospheric,Singleplayer,Story Rich->Adventure conf.: 50,00 %
+Classic->Singleplayer conf.: 50,00 %
+Early Access->Indie conf.: 50,00 %
+Indie,RPG,Singleplayer->Adventure conf.: 50,00 %
+Adventure,Atmospheric,Great Soundtrack->Singleplayer conf.: 50,00 %
+Atmospheric,Great Soundtrack,Singleplayer->Adventure conf.: 50,00 %
+Adventure,Atmospheric,Indie->Singleplayer conf.: 50,00 %
+Atmospheric,Indie,Singleplayer->Adventure conf.: 50,00 %
+Action,Adventure,Great Soundtrack->Singleplayer conf.: 50,00 %
+Turn-Based->Strategy conf.: 50,00 %
+2D,Action,Indie->Singleplayer conf.: 50,00 %
+Co-op->Action conf.: 46,67 %
+Atmospheric->Adventure conf.: 45,45 %
+Atmospheric->Singleplayer conf.: 45,45 %
+Puzzle->Indie conf.: 44,44 %
+Great Soundtrack->Singleplayer conf.: 43,48 %
+Indie,RPG->Adventure conf.: 42,86 %
+Simulation->Indie conf.: 42,86 %
+Great Soundtrack,Indie->Singleplayer conf.: 42,86 %
+Action,Co-op->Multiplayer conf.: 42,86 %
+Horror->Adventure conf.: 42,86 %
+RPG,Singleplayer->Adventure conf.: 42,86 %
+2D->Indie conf.: 42,86 %
+Action,Atmospheric->Adventure conf.: 40,00 %
+Atmospheric,Indie->Adventure conf.: 40,00 %
+Adventure,Story Rich->Singleplayer conf.: 40,00 %
+Singleplayer,Story Rich->Adventure conf.: 40,00 %
+Co-op->Multiplayer conf.: 40,00 %
+Adventure,Open World->Singleplayer conf.: 40,00 %
+Great Soundtrack,Singleplayer->Adventure conf.: 40,00 %
+Open World,Singleplayer->Adventure conf.: 40,00 %
+Third Person->Action conf.: 40,00 %
+Adventure,Story Rich->Atmospheric conf.: 40,00 %
+2D,Adventure->Singleplayer conf.: 40,00 %
+Action,Open World->Singleplayer conf.: 40,00 %
+Singleplayer,Story Rich->Atmospheric conf.: 40,00 %
+Atmospheric,Indie->Singleplayer conf.: 40,00 %
+Action,Atmospheric->Singleplayer conf.: 40,00 %
+2D,Adventure->Indie conf.: 40,00 %
+Open World,Singleplayer->Action conf.: 40,00 %
+Adventure,Open World->Action conf.: 40,00 %
+Third Person->Singleplayer conf.: 40,00 %
+Adventure,Co-op->Multiplayer conf.: 40,00 %
+Action,Open World->Adventure conf.: 40,00 %
+Adventure,Co-op->Action conf.: 40,00 %
+Co-op,Singleplayer->Action conf.: 40,00 %
+Co-op,Singleplayer->Multiplayer conf.: 40,00 %
+Story Rich->Singleplayer conf.: 38,46 %
+Story Rich->Adventure conf.: 38,46 %
+RPG->Adventure conf.: 38,10 %
+Adventure,RPG->Indie conf.: 37,50 %
+Adventure,RPG->Singleplayer conf.: 37,50 %
+Difficult->Action conf.: 37,50 %
+Adventure,RPG->Action conf.: 37,50 %
+Adventure,Multiplayer->Action conf.: 37,50 %
+Difficult->Indie conf.: 37,50 %
+Difficult->Singleplayer conf.: 37,50 %
+Casual->Indie conf.: 36,84 %
+Platformer->Indie conf.: 36,36 %
+Multiplayer->Action conf.: 36,36 %
+Platformer->Action conf.: 36,36 %
+Open World->Action conf.: 35,71 %
+Open World->Singleplayer conf.: 35,71 %
+Open World->Adventure conf.: 35,71 %
+Great Soundtrack->Adventure conf.: 34,78 %
+Action,Great Soundtrack,Singleplayer->Indie conf.: 33,33 %
+Action,Co-op,Multiplayer->Singleplayer conf.: 33,33 %
+Adventure,Platformer->Indie conf.: 33,33 %
+Action,Adventure,RPG->Indie conf.: 33,33 %
+Action,Adventure,Indie->Singleplayer conf.: 33,33 %
+Action,Adventure,Indie->RPG conf.: 33,33 %
+Adventure,Indie,RPG->Action conf.: 33,33 %
+Great Soundtrack,Indie,Singleplayer->Action conf.: 33,33 %
+Action,Great Soundtrack,Singleplayer->Adventure conf.: 33,33 %
+Action,Multiplayer,Singleplayer->Adventure conf.: 33,33 %
+Adventure,RPG,Singleplayer->Action conf.: 33,33 %
+Adventure,Puzzle->Indie conf.: 33,33 %
+2D,Singleplayer->Adventure conf.: 33,33 %
+Adventure,RPG,Singleplayer->Indie conf.: 33,33 %
+Action,Multiplayer,Singleplayer->Co-op conf.: 33,33 %
+Puzzle,Singleplayer->Indie conf.: 33,33 %
+Action,Co-op,Multiplayer->Adventure conf.: 33,33 %
+Action,Adventure,Multiplayer->Co-op conf.: 33,33 %
+2D,Indie->Singleplayer conf.: 33,33 %
+Adventure,Indie,RPG->Singleplayer conf.: 33,33 %
+Great Soundtrack,Indie,Singleplayer->Adventure conf.: 33,33 %
+2D,Platformer->Indie conf.: 33,33 %
+2D,Indie,Singleplayer->Action conf.: 33,33 %
+Action,Adventure,RPG->Singleplayer conf.: 33,33 %
+Action,Adventure,Multiplayer->Singleplayer conf.: 33,33 %
+2D,Indie,Singleplayer->Adventure conf.: 33,33 %
+Adventure,Puzzle->Singleplayer conf.: 33,33 %
+Simulation,Strategy->Indie conf.: 33,33 %
+Simulation,Strategy->Singleplayer conf.: 33,33 %
+Simulation,Singleplayer->Strategy conf.: 33,33 %
+Multiplayer,Strategy->Action conf.: 33,33 %
+Multiplayer,Strategy->Singleplayer conf.: 33,33 %
+VR->VR Only conf.: 33,33 %
+VR->Indie conf.: 33,33 %
+Retro->Indie conf.: 33,33 %
+Anime->Indie conf.: 33,33 %
+Arcade->Indie conf.: 33,33 %
+Puzzle->Singleplayer conf.: 33,33 %
+Sci-fi->Singleplayer conf.: 33,33 %
+Sandbox->Indie conf.: 33,33 %
+Sandbox->Singleplayer conf.: 33,33 %
+Anime->Adventure conf.: 33,33 %
+Puzzle->Adventure conf.: 33,33 %
+Comedy->Indie conf.: 33,33 %
+Comedy->Singleplayer conf.: 33,33 %
+Co-op->Singleplayer conf.: 33,33 %
+Co-op->Adventure conf.: 33,33 %
+Fantasy->Singleplayer conf.: 33,33 %
+Fantasy->Adventure conf.: 33,33 %
+RPG->Indie conf.: 33,33 %
+RPG->Singleplayer conf.: 33,33 %
+Fantasy->RPG conf.: 33,33 %
+Retro->Action conf.: 33,33 %
+Arcade->Action conf.: 33,33 %
+Sci-fi->Action conf.: 33,33 %
+First-Person->Action conf.: 33,33 %
+Adventure,Horror->Indie conf.: 33,33 %
+Co-op,Multiplayer->Singleplayer conf.: 33,33 %
+Multiplayer,Singleplayer->Action conf.: 33,33 %
+Difficult,Singleplayer->Action conf.: 33,33 %
+Puzzle,Singleplayer->Adventure conf.: 33,33 %
+Adventure,First-Person->Singleplayer conf.: 33,33 %
+First-Person,Singleplayer->Adventure conf.: 33,33 %
+Simulation,Singleplayer->Indie conf.: 33,33 %
+Adventure,Fantasy->Singleplayer conf.: 33,33 %
+Fantasy,Singleplayer->Adventure conf.: 33,33 %
+Adventure,Fantasy->RPG conf.: 33,33 %
+Fantasy,RPG->Adventure conf.: 33,33 %
+Fantasy,Singleplayer->RPG conf.: 33,33 %
+Fantasy,RPG->Singleplayer conf.: 33,33 %
+Difficult,Singleplayer->Indie conf.: 33,33 %
+Difficult,Indie->Singleplayer conf.: 33,33 %
+2D,Platformer->Action conf.: 33,33 %
+Co-op,Multiplayer->Adventure conf.: 33,33 %
+2D,Singleplayer->Action conf.: 33,33 %
+2D,Action->Indie conf.: 33,33 %
+Action,Great Soundtrack->Indie conf.: 33,33 %
+Action,Difficult->Singleplayer conf.: 33,33 %
+Difficult,Indie->Action conf.: 33,33 %
+Action,Difficult->Indie conf.: 33,33 %
+Action,RPG->Singleplayer conf.: 33,33 %
+Action,RPG->Indie conf.: 33,33 %
+Adventure,First-Person->Action conf.: 33,33 %
+2D,Action->Singleplayer conf.: 33,33 %
+First-Person,Singleplayer->Action conf.: 33,33 %
+Adventure,Horror->Action conf.: 33,33 %
+Action,Great Soundtrack->Adventure conf.: 33,33 %
+Adventure,Platformer->Action conf.: 33,33 %
+Strategy->Indie conf.: 31,82 %
+Story Rich->Atmospheric conf.: 30,77 %
+Adventure->Singleplayer conf.: 30,43 %
+Great Soundtrack->Indie conf.: 30,43 %
+Great Soundtrack,Singleplayer->Action conf.: 30,00 %
+Great Soundtrack,Singleplayer->Indie conf.: 30,00 %
+Indie,Singleplayer->Adventure conf.: 30,00 %

@@ -24,6 +24,7 @@ namespace SteamDataMining
             Console.WriteLine("Found " + frequentItemSets.Count + " supported length 1 patterns");
 
             supportedCandidates = new List<SortedSet<string>>();
+            supportedCandidates.AddRange(frequentItemSets.Keys);
             for (k = 1; frequentItemSets.Count > 0; k++)
             {
 
@@ -32,20 +33,21 @@ namespace SteamDataMining
                 
                 Console.WriteLine(" - found " + frequentItemSets.Count + " supported candidates.");
 
-                if (k + 1 >= minimumPrintSize)
-                {
+                supportedCandidates.AddRange(frequentItemSets.Keys);
 
-                    supportedCandidates.AddRange(frequentItemSets.Keys);
+                //if (k + 1 >= minimumPrintSize)
+                //{
 
-                    foreach (var set in frequentItemSets.Keys)
-                    {
-                        foreach (var item in set)
-                        {
-                            Console.Write(item + " ");
-                        }
-                        Console.WriteLine(";");
-                    }
-                }   
+
+                //    foreach (var set in frequentItemSets.Keys)
+                //    {
+                //        foreach (var item in set)
+                //        {
+                //            Console.Write(item + " ");
+                //        }
+                //        Console.WriteLine(";");
+                //    }
+                //}   
             }
 
             if (generateRules)
@@ -54,6 +56,7 @@ namespace SteamDataMining
             return supportedCandidates;
         }
 
+        //rule generated with help from : https://www.codeproject.com/Articles/70371/Apriori-Algorithm
         private static void GenerateRules(List<SortedSet<string>> supportedCandidates, double confidence)
         {
             var rulesList = new HashSet<Rule>();
@@ -97,18 +100,26 @@ namespace SteamDataMining
                 }
             }
 
-            foreach (var r in strongRules)
+            var strongList = strongRules.ToList();
+            
+            strongList.Sort((e1, e2) => e2.confidence.CompareTo(e1.confidence));
+
+            Console.WriteLine();
+            foreach (var r in strongList)
             {
-                Console.WriteLine("RULE: " + SSetToString(r.subset) + "->" + SSetToString(r.remaining) + "conf.: "+r.confidence);
+                Console.WriteLine("" + SSetToString(r.subset) + "->" + SSetToString(r.remaining) + " conf.: "+r.confidence.ToString("P"));
             }
 
         }
 
         private static double GetConfidence(SortedSet<string> sub, SortedSet<string> candidate, List<SortedSet<string>> supportedCandidates)
         {
+            double x = supportedCandidates.Where(s => sub.All(s.Contains)).Count();
 
+            if (x == 1)
+                return 0;
 
-            double supportSub = ((double)supportedCandidates.Where(s => sub.All(s.Contains)).Count()) / supportedCandidates.Count();
+            double supportSub = (x) / supportedCandidates.Count();
 
             double supportCandidate = ((double)supportedCandidates.Where(s => candidate.All(s.Contains)).Count()) / supportedCandidates.Count();
 
@@ -135,15 +146,17 @@ namespace SteamDataMining
             }
         }
 
-        private static string SSetToString(SortedSet<string> ss)
+        public static string SSetToString(SortedSet<string> ss)
         {
             string s = "";
-
+            
             foreach (var s1 in ss)
             {
-                s += s1 + " ";
+                s += s1 + ",";
             }
-            return s;
+
+
+            return s.Substring(0, s.Length - 1);
         }
 
         private static Dictionary<SortedSet<string>, int> generateFrequentItemSets(int supportThreshold, List<string[]> data, Dictionary<SortedSet<string>, int> lowerLevelItemSets)

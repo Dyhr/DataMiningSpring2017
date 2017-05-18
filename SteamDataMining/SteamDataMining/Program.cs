@@ -27,17 +27,17 @@ namespace SteamDataMining
 
             Console.WriteLine("Number of items: " + data.Length);
             Console.WriteLine("Number of tags: " + tags.Length);
-
-
+            Console.WriteLine();
+            
             // ---------    APRIORI MINING          ----------
             double threshold = 0.03;
-            double confidence = 0.5;
+            double confidence = 0.30;
 
             while (threshold > 0.02)
             {
                 var result = Apriori.MineItemSets(data.Select(x => x.tags.Keys.ToArray()).ToList(), threshold, 3,confidence, true);
 
-                var resultMappedToRating = result.ToDictionary(r => SetAsString(r),
+                var resultMappedToRating = result.ToDictionary(r => Apriori.SSetToString(r),
                     r => getAverage(data.Where(x => r.All(x.tags.Keys.Contains)))); //.Average(d => d.rank));
 
 
@@ -47,7 +47,7 @@ namespace SteamDataMining
                             new ResultItem()
                             {
                                 rating = getAverage(data.Where(x => r.All(x.tags.Keys.Contains))),
-                                tags = SetAsString(r),
+                                tags = Apriori.SSetToString(r),
                                 median = getMedian(data.Where(x => r.All(x.tags.Keys.Contains)))
                             }).ToList();
 
@@ -114,18 +114,7 @@ namespace SteamDataMining
 
             return (int)cs.ElementAt((cs.Count/2)).rank;
         }
-
-        private static string SetAsString(SortedSet<string> set)
-        {
-            var retString = "";
-
-            foreach (var item in set)
-            {
-                retString += (item + " ");
-            }
-            return retString;
-        }
-
+        
         private static void WriteXML(List<ResultItem> tagsWithRating, string filename)
         {
             System.Xml.Serialization.XmlSerializer writer =
