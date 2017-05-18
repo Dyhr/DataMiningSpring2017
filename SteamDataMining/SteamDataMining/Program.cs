@@ -84,13 +84,16 @@ namespace SteamDataMining
                                                   result.Any(set => set.All(tag => item.tags.ContainsKey(tag)))).ToArray();
             Console.WriteLine("Training with "+frequentData.Length+ " items");
 
-            var mapSize = (int)Math.Round(Math.Sqrt(frequentData.Length))*2;
-            Console.WriteLine("Using map size of "+frequentData.Length);
+            var mapSize = (int)Math.Ceiling(Math.Sqrt(frequentData.Length))*2;
+            Console.WriteLine("Using map size of "+mapSize);
             var map = new Map(tags.Length, mapSize, 100, frequentData);
-            //map.DumpCoordinates();
             var resultMap = map.ResultMap();
             var bitmap = new Bitmap(mapSize, mapSize);
-            var colors = tags.Select(_ => Color.FromArgb(rnd.Next(255), rnd.Next(255), rnd.Next(255))).ToArray();
+            var colors = tags.Select((_, i) =>
+            {
+                var c = (int) (i / (double)tags.Length) * 255;
+                return Color.FromArgb(c,c,c);
+            }).ToArray();
             for(int i = 0; i < colors.Length; i++)
                 Console.WriteLine(string.Format("{0}: {1},{2},{3} - {4}", tags[i], colors[i].R, colors[i].G, colors[i].B, colors[i].Name));
             for (int x = 0; x < mapSize; x++)
@@ -100,15 +103,16 @@ namespace SteamDataMining
                     bitmap.SetPixel(x, y, GetColor(colors, resultMap[x,y]));
                 }
             }
-            foreach (var item in map.patterns)
+            for (var i = 0; i < map.patterns.Count; i++)
             {
+                var item = map.patterns[i];
                 var pos = map.Winner(item);
-                bitmap.SetPixel(pos.Item1, pos.Item2, Color.Black);
+                var color = Color.FromArgb(rnd.Next() % 255, rnd.Next() % 255, rnd.Next() % 255);
+                bitmap.SetPixel(pos.Item1, pos.Item2, color);
+                Console.WriteLine(frequentData[i] + " " + color.Name);
             }
             bitmap.Save("./SOM.png", ImageFormat.Png);
             Console.WriteLine("Done");
-
-            Console.ReadLine();
         }
 
         //should be sorted before.
