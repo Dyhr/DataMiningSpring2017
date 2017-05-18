@@ -80,10 +80,9 @@ namespace SteamDataMining
                                                   result.Any(set => set.All(tag => item.tags.ContainsKey(tag)))).ToArray();
             Console.WriteLine("Training with "+frequentData.Length+ " items");
 
-            var mapSize = (int)Math.Round(Math.Sqrt(frequentData.Length))*2;
+            var mapSize = (int)Math.Ceiling(Math.Sqrt(frequentData.Length))*2;
             Console.WriteLine("Using map size of "+mapSize);
             var map = new Map(tags.Length, mapSize, 100, frequentData);
-            //map.DumpCoordinates();
             var resultMap = map.ResultMap();
             var bitmap = new Bitmap(mapSize, mapSize);
             var colors = tags.Select((_, i) =>
