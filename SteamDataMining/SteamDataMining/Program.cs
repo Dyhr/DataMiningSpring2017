@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO.IsolatedStorage;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -33,32 +34,27 @@ namespace SteamDataMining
             double threshold = 0.03;
             double confidence = 0.30;
 
-            while (threshold > 0.02)
-            {
-                var result = Apriori.MineItemSets(data.Select(x => x.tags.Keys.ToArray()).ToList(), threshold, 3,confidence, true);
+            var result = Apriori.MineItemSets(data.Select(x => x.tags.Keys.ToArray()).ToList(), threshold, 3,confidence, true);
 
-                var resultMappedToRating = result.ToDictionary(r => Apriori.SSetToString(r),
-                    r => getAverage(data.Where(x => r.All(x.tags.Keys.Contains)))); //.Average(d => d.rank));
+            var resultMappedToRating = result.ToDictionary(r => SetAsString(r),
+                r => getAverage(data.Where(x => r.All(x.tags.Keys.Contains)))); //.Average(d => d.rank));
 
 
-                var xs =
-                    result.Select(
-                        r =>
-                            new ResultItem()
-                            {
-                                rating = getAverage(data.Where(x => r.All(x.tags.Keys.Contains))),
-                                tags = Apriori.SSetToString(r),
-                                median = getMedian(data.Where(x => r.All(x.tags.Keys.Contains)))
-                            }).ToList();
+            var xs =
+                result.Select(
+                    r =>
+                        new ResultItem()
+                        {
+                            rating = getAverage(data.Where(x => r.All(x.tags.Keys.Contains))),
+                            tags = SetAsString(r),
+                            median = getMedian(data.Where(x => r.All(x.tags.Keys.Contains)))
+                        }).ToList();
 
 
-                xs.Sort((kv, kv2) => kv.rating.CompareTo(kv2.rating));
+            xs.Sort((kv, kv2) => kv.rating.CompareTo(kv2.rating));
 
-                WriteXML(xs,
-                    @"./th" + threshold.ToString() + ".xml");
-                threshold -= 0.01;
+            WriteXML(xs, @"./th" + threshold + ".xml");
 
-            }
 
             //AVERAGE RATINGS PR TAG
             var tagRatings = tags.Select(r => new ResultItem()
@@ -73,34 +69,40 @@ namespace SteamDataMining
             WriteXML(tagRatings,
                 @"./tagRatings.xml");
 
-            Console.ReadLine();
-
 
             // --------     SELF-ORGANIZING MAPS    ---------
 
-            var mapSize = 128;
-            var map = new Map(tags.Length, mapSize, 100, data);
+            Console.WriteLine();
+            Console.WriteLine("Training a SOM on items with frequent tagsets.");
+
+            var rnd = new Random();
+            var frequentData = data.Where(item => rnd.NextDouble() < 0.25 &&
+                                                  result.Any(set => set.All(tag => item.tags.ContainsKey(tag)))).ToArray();
+            Console.WriteLine("Training with "+frequentData.Length+ " items");
+
+            var mapSize = (int)Math.Round(Math.Sqrt(frequentData.Length))*2;
+            Console.WriteLine("Using map size of "+frequentData.Length);
+            var map = new Map(tags.Length, mapSize, 100, frequentData);
             //map.DumpCoordinates();
             var resultMap = map.ResultMap();
             var bitmap = new Bitmap(mapSize, mapSize);
-            var max = 0d;
+            var colors = tags.Select(_ => Color.FromArgb(rnd.Next(255), rnd.Next(255), rnd.Next(255))).ToArray();
+            for(int i = 0; i < colors.Length; i++)
+                Console.WriteLine(string.Format("{0}: {1},{2},{3} - {4}", tags[i], colors[i].R, colors[i].G, colors[i].B, colors[i].Name));
             for (int x = 0; x < mapSize; x++)
             {
                 for (int y = 0; y < mapSize; y++)
                 {
-                    var average = resultMap[x, y].Aggregate(0d, (acc, v) => acc + v);
-                    if (average > max) max = average;
+                    bitmap.SetPixel(x, y, GetColor(colors, resultMap[x,y]));
                 }
             }
-            for (int x = 0; x < mapSize; x++)
+            foreach (var item in map.patterns)
             {
-                for (int y = 0; y < mapSize; y++)
-                {
-                    var average = resultMap[x, y].Aggregate(0d, (acc, v) => acc + v) / max;
-                    bitmap.SetPixel(x, y, Color.FromArgb((int)(average * 255), (int)(average * 255), (int)(average * 255)));
-                }
+                var pos = map.Winner(item);
+                bitmap.SetPixel(pos.Item1, pos.Item2, Color.Black);
             }
             bitmap.Save("./SOM.png", ImageFormat.Png);
+            Console.WriteLine("Done");
 
             Console.ReadLine();
         }
@@ -114,7 +116,43 @@ namespace SteamDataMining
 
             return (int)cs.ElementAt((cs.Count/2)).rank;
         }
-        
+
+        private static Color GetColor(Color[] colors, double[] item)
+        {
+            double[] color = {0.0, 0.0, 0.0};
+            int total = 0;
+
+            for (int i = 0; i < item.Length; i++)
+            {
+                color[0] += colors[i].R * item[i];
+                color[1] += colors[i].G * item[i];
+                color[2] += colors[i].B * item[i];
+                total ++;
+            }
+
+            color[0] /= total;
+            color[1] /= total;
+            color[2] /= total;
+
+            var max = color.Max();
+            color[0] = color[0]/max * 255;
+            color[1] = color[1]/max * 255;
+            color[2] = color[2]/max * 255;
+
+            return Color.FromArgb((int) color[0], (int) color[1], (int) color[2]);
+        }
+
+        private static string SetAsString(SortedSet<string> set)
+        {
+            var retString = "";
+
+            foreach (var item in set)
+            {
+                retString += (item + " ");
+            }
+            return retString;
+        }
+
         private static void WriteXML(List<ResultItem> tagsWithRating, string filename)
         {
             System.Xml.Serialization.XmlSerializer writer =
