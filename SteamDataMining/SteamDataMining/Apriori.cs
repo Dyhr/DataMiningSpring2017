@@ -79,21 +79,20 @@ namespace SteamDataMining
                         {
                             rulesList.Add(rule);
                             
-                            var c = GetConfidence(rule.subset, supportedCandidate, supportedCandidates);
+                            var c = GetConfidence(rule.premise, supportedCandidate, supportedCandidates);
 
 
                             if (c >= confidence)
                             {
-
-                                Rule newRule = new Rule(rule.subset, rule.remaining, c);
-                                strongRules.Add(newRule);
+                                rule.confidence = c;
+                                strongRules.Add(rule);
                             }
 
-                            c = GetConfidence(rule.remaining, supportedCandidate, supportedCandidates);
+                            c = GetConfidence(rule.conclusion, supportedCandidate, supportedCandidates);
 
                             if (c >= confidence)
                             {
-                                Rule newRule = new Rule(rule.remaining, rule.subset, c);
+                                Rule newRule = new Rule(rule.conclusion, rule.premise, c);
                                 strongRules.Add(newRule);
                             }
                         }
@@ -108,7 +107,7 @@ namespace SteamDataMining
             Console.WriteLine();
             foreach (var r in strongList)
             {
-                Console.WriteLine("" + SSetToString(r.subset) + "->" + SSetToString(r.remaining) + " conf.: "+r.confidence.ToString("P") + " dRating: "+r.deltaRating.ToString("N"));
+                Console.WriteLine("" + SSetToString(r.premise) + "->" + SSetToString(r.conclusion) + " conf.: "+r.confidence.ToString("P") + " dRating: "+r.deltaRating.ToString("N"));
             }
 
         }
@@ -259,38 +258,40 @@ namespace SteamDataMining
     
     public class Rule
     {
-        public SortedSet<string> remaining;
-        public SortedSet<string> subset;
+        public SortedSet<string> conclusion;
+        public SortedSet<string> premise;
         public double confidence;
         public double deltaRating;
 
-        public Rule(SortedSet<string> subset, SortedSet<string> remaining, double c)
+        public Rule(SortedSet<string> premise, SortedSet<string> conclusion, double c)
         {
-            this.subset = subset;
-            this.remaining = remaining;
+            this.premise = premise;
+            this.conclusion = conclusion;
             this.confidence = c;
 
-            var itemsWithPremise = Program.data.Where(x => subset.All(x.tags.ContainsKey));
+            var itemsWithPremise = Program.data.Where(x => premise.All(x.tags.ContainsKey) && (x.rank != null));
+            var itemsWithPremiseNotConclusion = itemsWithPremise.Where(x => !(conclusion.All(x.tags.ContainsKey)));
 
-            var ratingWithPremise = (double) itemsWithPremise.Average(i => i.rank);
-            var ratingWithPremiseAndConclusion = (double)
-                itemsWithPremise.Where(x => remaining.All(x.tags.ContainsKey)).Average(i=>i.rank);
+            var ratingWithPremiseAndConclusion = 
+                itemsWithPremise.Where(x => conclusion.All(x.tags.ContainsKey)).Average(i=>i.rank.Value);
 
-            deltaRating = ratingWithPremiseAndConclusion - ratingWithPremise;
+            var ratingWithPremiseNotConclusion = (itemsWithPremiseNotConclusion.Count() > 0) ?itemsWithPremiseNotConclusion.Average(i => i.rank.Value) : ratingWithPremiseAndConclusion;
+
+            deltaRating = ratingWithPremiseAndConclusion - ratingWithPremiseNotConclusion;
         }
 
         public override int GetHashCode()
         {
             int x = 0;
 
-            foreach (var s in remaining)
+            foreach (var s in conclusion)
             {
                 x += s.GetHashCode();
             }
 
             x *= 101;
 
-            foreach (var s in subset)
+            foreach (var s in premise)
             {
                 x += s.GetHashCode();
             }
@@ -301,8 +302,8 @@ namespace SteamDataMining
         public override bool Equals(object obj)
         {
             Rule other = obj as Rule;
-            return (other.subset.Count == subset.Count && other.subset.All(subset.Contains))
-                   && (other.remaining.Count == remaining.Count && other.remaining.All(remaining.Contains));
+            return (other.premise.Count == premise.Count && other.premise.All(premise.Contains))
+                   && (other.conclusion.Count == conclusion.Count && other.conclusion.All(conclusion.Contains));
             
         }
     }
