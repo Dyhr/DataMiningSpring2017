@@ -54,7 +54,7 @@ namespace SteamDataMining
                 xs.Sort((kv, kv2) => kv.rating.CompareTo(kv2.rating));
 
                 WriteXML(xs,
-                    @"c:\temp\th" + threshold.ToString() + ".xml");
+                    @"./th" + threshold.ToString() + ".xml");
                 threshold -= 0.01;
 
             }
@@ -70,7 +70,7 @@ namespace SteamDataMining
             tagRatings.Sort((kv, kv2) => kv.rating.CompareTo(kv2.rating));
 
             WriteXML(tagRatings,
-                @"c:\temp\tagRatings.xml");
+                @"./tagRatings.xml");
 
             Console.ReadLine();
 
