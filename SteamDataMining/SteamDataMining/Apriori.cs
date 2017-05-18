@@ -35,19 +35,19 @@ namespace SteamDataMining
 
                 supportedCandidates.AddRange(frequentItemSets.Keys);
 
-                //if (k + 1 >= minimumPrintSize)
-                //{
+                if (k + 1 >= minimumPrintSize)
+                {
 
 
-                //    foreach (var set in frequentItemSets.Keys)
-                //    {
-                //        foreach (var item in set)
-                //        {
-                //            Console.Write(item + " ");
-                //        }
-                //        Console.WriteLine(";");
-                //    }
-                //}   
+                    foreach (var set in frequentItemSets.Keys)
+                    {
+                        foreach (var item in set)
+                        {
+                            Console.Write(item + " ");
+                        }
+                        Console.WriteLine(";");
+                    }
+                }
             }
 
             if (generateRules)
@@ -84,6 +84,7 @@ namespace SteamDataMining
 
                             if (c >= confidence)
                             {
+
                                 Rule newRule = new Rule(rule.subset, rule.remaining, c);
                                 strongRules.Add(newRule);
                             }
@@ -107,7 +108,7 @@ namespace SteamDataMining
             Console.WriteLine();
             foreach (var r in strongList)
             {
-                Console.WriteLine("" + SSetToString(r.subset) + "->" + SSetToString(r.remaining) + " conf.: "+r.confidence.ToString("P"));
+                Console.WriteLine("" + SSetToString(r.subset) + "->" + SSetToString(r.remaining) + " conf.: "+r.confidence.ToString("P") + " dRating: "+r.deltaRating.ToString("N"));
             }
 
         }
@@ -254,23 +255,28 @@ namespace SteamDataMining
         // Assumes that items in ItemSets and transactions are both unique
         private static int countSupport(SortedSet<string> itemSet, List<string[]> data)
             => data.Where(item => itemSet.All(str => item.Contains(str))).Count();
-
-
     }
-
-
-
+    
     public class Rule
     {
         public SortedSet<string> remaining;
         public SortedSet<string> subset;
         public double confidence;
+        public double deltaRating;
 
         public Rule(SortedSet<string> subset, SortedSet<string> remaining, double c)
         {
             this.subset = subset;
             this.remaining = remaining;
             this.confidence = c;
+
+            var itemsWithPremise = Program.data.Where(x => subset.All(x.tags.ContainsKey));
+
+            var ratingWithPremise = (double) itemsWithPremise.Average(i => i.rank);
+            var ratingWithPremiseAndConclusion = (double)
+                itemsWithPremise.Where(x => remaining.All(x.tags.ContainsKey)).Average(i=>i.rank);
+
+            deltaRating = ratingWithPremiseAndConclusion - ratingWithPremise;
         }
 
         public override int GetHashCode()
