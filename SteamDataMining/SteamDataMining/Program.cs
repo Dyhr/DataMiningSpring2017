@@ -29,46 +29,6 @@ namespace SteamDataMining
             Console.WriteLine("Number of tags: " + tags.Length);
 
 
-            // --------     SELF-ORGANIZING MAPS    ---------
-
-            var mapSize = 128;
-            var map = new Map(tags.Length, mapSize, 100, data);
-            //map.DumpCoordinates();
-            var resultMap = map.ResultMap();
-            var bitmap = new Bitmap(mapSize, mapSize);
-            var max = 0d;
-            for (int x = 0; x < mapSize; x++)
-            {
-                for (int y = 0; y < mapSize; y++)
-                {
-                    var average = resultMap[x, y].Aggregate(0d, (acc, v) => acc + v);
-                    if (average > max) max = average;
-                }
-            }
-            for (int x = 0; x < mapSize; x++)
-            {
-                for (int y = 0; y < mapSize; y++)
-                {
-                    var average = resultMap[x, y].Aggregate(0d, (acc, v) => acc + v) / max;
-                    bitmap.SetPixel(x, y, Color.FromArgb((int)(average * 255), (int)(average * 255), (int)(average * 255)));
-                }
-            }
-
-            Console.Write("Save SOM output as image? (Y/N): ");
-            var answer = Console.ReadLine();
-            if (answer.ToLower() == "y")
-            {
-                bitmap.Save("./SOM.png", ImageFormat.Png);
-            }
-            else
-            {
-                var box = new PictureBox();
-                box.Image = bitmap;
-                box.Show();
-            }
-            Console.ReadLine();
-
-
             // ---------    APRIORI MINING          ----------
             double threshold = 0.1;
 
@@ -111,6 +71,35 @@ namespace SteamDataMining
 
             WriteXML(tagRatings,
                 @"c:\temp\tagRatings.xml");
+
+            Console.ReadLine();
+
+
+            // --------     SELF-ORGANIZING MAPS    ---------
+
+            var mapSize = 128;
+            var map = new Map(tags.Length, mapSize, 100, data);
+            //map.DumpCoordinates();
+            var resultMap = map.ResultMap();
+            var bitmap = new Bitmap(mapSize, mapSize);
+            var max = 0d;
+            for (int x = 0; x < mapSize; x++)
+            {
+                for (int y = 0; y < mapSize; y++)
+                {
+                    var average = resultMap[x, y].Aggregate(0d, (acc, v) => acc + v);
+                    if (average > max) max = average;
+                }
+            }
+            for (int x = 0; x < mapSize; x++)
+            {
+                for (int y = 0; y < mapSize; y++)
+                {
+                    var average = resultMap[x, y].Aggregate(0d, (acc, v) => acc + v) / max;
+                    bitmap.SetPixel(x, y, Color.FromArgb((int)(average * 255), (int)(average * 255), (int)(average * 255)));
+                }
+            }
+            bitmap.Save("./SOM.png", ImageFormat.Png);
 
             Console.ReadLine();
         }
