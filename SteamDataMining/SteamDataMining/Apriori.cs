@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ namespace SteamDataMining
 {
     class Apriori
     {
-        public static List<SortedSet<string>> MineItemSets(List<string[]> data, double supportThreshold, int minimumPrintSize)
+        public static List<SortedSet<string>> MineItemSets(List<string[]> data, double supportThreshold, int minimumPrintSize, double confidence,bool generateRules = false)
         {
             Console.WriteLine("Running Apriori using support threshold " + supportThreshold);
             int k;
@@ -47,16 +48,103 @@ namespace SteamDataMining
                 }   
             }
 
-            //RuleGeneration(supportedCandidates,data);
+            if (generateRules)
+                GenerateRules(supportedCandidates, confidence);
 
             return supportedCandidates;
         }
 
-        private static void RuleGeneration(List<SortedSet<string>> supportedCandidates, List<string[]> data)
+        private static void GenerateRules(List<SortedSet<string>> supportedCandidates, double confidence)
         {
-            throw new NotImplementedException();
+            var rulesList = new HashSet<Rule>();
+            var strongRules = new HashSet<Rule>();
+
+            foreach (var supportedCandidate in supportedCandidates)
+            {
+                if (supportedCandidate.Count > 1)
+                {
+                    HashSet<SortedSet<string>> subsets = new HashSet<SortedSet<string>>();
+
+                    GetSubsets(supportedCandidate, ref subsets);
+
+                    foreach (var subset in subsets)
+                    {
+                        SortedSet<string> remaining = new SortedSet<string>(supportedCandidate.Where(x=> !subset.Contains(x)));
+                        Rule rule = new Rule(subset, remaining, 0);
+
+                        if (!rulesList.Contains(rule))
+                        {
+                            rulesList.Add(rule);
+                            
+                            var c = GetConfidence(rule.subset, supportedCandidate, supportedCandidates);
+
+
+                            if (c >= confidence)
+                            {
+                                Rule newRule = new Rule(rule.subset, rule.remaining, c);
+                                strongRules.Add(newRule);
+                            }
+
+                            c = GetConfidence(rule.remaining, supportedCandidate, supportedCandidates);
+
+                            if (c >= confidence)
+                            {
+                                Rule newRule = new Rule(rule.remaining, rule.subset, c);
+                                strongRules.Add(newRule);
+                            }
+                        }
+                    }
+                }
+            }
+
+            foreach (var r in strongRules)
+            {
+                Console.WriteLine("RULE: " + SSetToString(r.subset) + "->" + SSetToString(r.remaining) + "conf.: "+r.confidence);
+            }
+
         }
-        
+
+        private static double GetConfidence(SortedSet<string> sub, SortedSet<string> candidate, List<SortedSet<string>> supportedCandidates)
+        {
+
+
+            double supportSub = ((double)supportedCandidates.Where(s => sub.All(s.Contains)).Count()) / supportedCandidates.Count();
+
+            double supportCandidate = ((double)supportedCandidates.Where(s => candidate.All(s.Contains)).Count()) / supportedCandidates.Count();
+
+
+            return supportCandidate / supportSub;
+        }
+
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void GetSubsets(SortedSet<string> tuple, ref HashSet<SortedSet<string>> subsets)
+        {
+            if (tuple.Count < 2)
+                return;
+
+            for (int i = 0; i < tuple.Count; i++)
+            {
+                var s = tuple.ElementAt(i);
+
+                var subset = new SortedSet<string>(tuple.Where(x => !x.Equals(s)));
+
+                if (!subsets.Any(ss => ss.Count == subset.Count && ss.All(subset.Contains)))
+                    subsets.Add(subset);
+
+                GetSubsets(subset, ref subsets);
+            }
+        }
+
+        private static string SSetToString(SortedSet<string> ss)
+        {
+            string s = "";
+
+            foreach (var s1 in ss)
+            {
+                s += s1 + " ";
+            }
+            return s;
+        }
 
         private static Dictionary<SortedSet<string>, int> generateFrequentItemSets(int supportThreshold, List<string[]> data, Dictionary<SortedSet<string>, int> lowerLevelItemSets)
         {
@@ -154,5 +242,49 @@ namespace SteamDataMining
         private static int countSupport(SortedSet<string> itemSet, List<string[]> data)
             => data.Where(item => itemSet.All(str => item.Contains(str))).Count();
 
+
+    }
+
+
+
+    public class Rule
+    {
+        public SortedSet<string> remaining;
+        public SortedSet<string> subset;
+        public double confidence;
+
+        public Rule(SortedSet<string> subset, SortedSet<string> remaining, double c)
+        {
+            this.subset = subset;
+            this.remaining = remaining;
+            this.confidence = c;
+        }
+
+        public override int GetHashCode()
+        {
+            int x = 0;
+
+            foreach (var s in remaining)
+            {
+                x += s.GetHashCode();
+            }
+
+            x *= 101;
+
+            foreach (var s in subset)
+            {
+                x += s.GetHashCode();
+            }
+
+            return x;
+        }
+
+        public override bool Equals(object obj)
+        {
+            Rule other = obj as Rule;
+            return (other.subset.Count == subset.Count && other.subset.All(subset.Contains))
+                   && (other.remaining.Count == remaining.Count && other.remaining.All(remaining.Contains));
+            
+        }
     }
 }
