@@ -30,11 +30,12 @@ namespace SteamDataMining
 
 
             // ---------    APRIORI MINING          ----------
-            double threshold = 0.1;
+            double threshold = 0.03;
+            double confidence = 0.5;
 
-            while (threshold > 0.01)
+            while (threshold > 0.02)
             {
-                var result = Apriori.MineItemSets(data.Select(x => x.tags.Keys.ToArray()).ToList(), threshold, 3);
+                var result = Apriori.MineItemSets(data.Select(x => x.tags.Keys.ToArray()).ToList(), threshold, 3,confidence, true);
 
                 var resultMappedToRating = result.ToDictionary(r => SetAsString(r),
                     r => getAverage(data.Where(x => r.All(x.tags.Keys.Contains)))); //.Average(d => d.rank));
@@ -153,5 +154,6 @@ namespace SteamDataMining
         }
         
     }
-    
+
+
 }
