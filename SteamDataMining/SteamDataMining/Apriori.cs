@@ -51,21 +51,19 @@ namespace SteamDataMining
             }
 
             if (generateRules)
-                GenerateRules(supportedCandidates, confidence);
+                GenerateRules(supportedCandidates, confidence,data);
 
             return supportedCandidates;
         }
 
         //rule generated with help from : https://www.codeproject.com/Articles/70371/Apriori-Algorithm
-        private static void GenerateRules(List<SortedSet<string>> supportedCandidates, double confidence)
+        private static void GenerateRules(List<SortedSet<string>> supportedCandidates, double confidence, List<string[]> data)
         {
             var rulesList = new HashSet<Rule>();
             var strongRules = new HashSet<Rule>();
 
             foreach (var supportedCandidate in supportedCandidates)
             {
-                if (supportedCandidate.Count > 1)
-                {
                     HashSet<SortedSet<string>> subsets = new HashSet<SortedSet<string>>();
 
                     GetSubsets(supportedCandidate, ref subsets);
@@ -79,7 +77,7 @@ namespace SteamDataMining
                         {
                             rulesList.Add(rule);
                             
-                            var c = GetConfidence(rule.premise, supportedCandidate, supportedCandidates);
+                            var c = GetConfidence(rule.premise, supportedCandidate, data);
 
 
                             if (c >= confidence)
@@ -88,7 +86,7 @@ namespace SteamDataMining
                                 strongRules.Add(rule);
                             }
 
-                            c = GetConfidence(rule.conclusion, supportedCandidate, supportedCandidates);
+                            c = GetConfidence(rule.conclusion, supportedCandidate, data);
 
                             if (c >= confidence)
                             {
@@ -97,7 +95,7 @@ namespace SteamDataMining
                             }
                         }
                     }
-                }
+                
             }
 
             var strongList = strongRules.ToList();
@@ -112,16 +110,16 @@ namespace SteamDataMining
 
         }
 
-        private static double GetConfidence(SortedSet<string> sub, SortedSet<string> candidate, List<SortedSet<string>> supportedCandidates)
+        private static double GetConfidence(SortedSet<string> sub, SortedSet<string> candidate, List<string[]> data)
         {
-            double x = supportedCandidates.Where(s => sub.All(s.Contains)).Count();
+            double x = data.Where(s => sub.All(s.Contains)).Count();
 
             if (x == 1)
                 return 0;
 
-            double supportSub = (x) / supportedCandidates.Count();
+            double supportSub = (x) / data.Count();
 
-            double supportCandidate = ((double)supportedCandidates.Where(s => candidate.All(s.Contains)).Count()) / supportedCandidates.Count();
+            double supportCandidate = ((double)data.Where(s => candidate.All(s.Contains)).Count()) / data.Count();
 
 
             return supportCandidate / supportSub;
