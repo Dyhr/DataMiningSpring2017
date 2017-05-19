@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfResultItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ResultItem>
+    <tags>Action Adventure Indie </tags>
+    <rating>46.3208446866485</rating>
+    <median>43</median>
+  </ResultItem>
+  <ResultItem>
+    <tags>Adventure Indie RPG </tags>
+    <rating>47.557471264367813</rating>
+    <median>46</median>
+  </ResultItem>
+  <ResultItem>
+    <tags>Action Casual Indie </tags>
+    <rating>48.662280701754383</rating>
+    <median>48</median>
+  </ResultItem>
+  <ResultItem>
+    <tags>Adventure Casual Indie </tags>
+    <rating>48.85809312638581</rating>
+    <median>48</median>
+  </ResultItem>
+  <ResultItem>
+    <tags>Action Multiplayer Singleplayer </tags>
+    <rating>51.60171568627451</rating>
+    <median>52</median>
+  </ResultItem>
+  <ResultItem>
+    <tags>Adventure Indie Singleplayer </tags>
+    <rating>54.9448275862069</rating>
+    <median>58</median>
+  </ResultItem>
+  <ResultItem>
+    <tags>Action Adventure Singleplayer </tags>
+    <rating>55.105810928013874</rating>
+    <median>55</median>
+  </ResultItem>
+  <ResultItem>
+    <tags>Action Indie Singleplayer </tags>
+    <rating>55.542572463768117</rating>
+    <median>58</median>
+  </ResultItem>
+  <ResultItem>
+    <tags>Adventure Atmospheric Singleplayer </tags>
+    <rating>58.605757196495617</rating>
+    <median>60</median>
+  </ResultItem>
+</ArrayOfResultItem>

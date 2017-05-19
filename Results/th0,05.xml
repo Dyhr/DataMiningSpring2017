@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfResultItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ResultItem>
+    <tags>Action Indie RPG </tags>
+    <rating>45.703264094955493</rating>
+    <median>43</median>
+  </ResultItem>
+  <ResultItem>
+    <tags>Action Adventure Indie </tags>
+    <rating>46.3208446866485</rating>
+    <median>43</median>
+  </ResultItem>
+  <ResultItem>
+    <tags>Action Indie Multiplayer </tags>
+    <rating>47.420612813370475</rating>
+    <median>48</median>
+  </ResultItem>
+  <ResultItem>
+    <tags>Action Adventure RPG </tags>
+    <rating>47.548638132295721</rating>
+    <median>46</median>
+  </ResultItem>
+  <ResultItem>
+    <tags>Adventure Indie RPG </tags>
+    <rating>47.557471264367813</rating>
+    <median>46</median>
+  </ResultItem>
+  <ResultItem>
+    <tags>Action Adventure Multiplayer </tags>
+    <rating>48.108108108108105</rating>
+    <median>48</median>
+  </ResultItem>
+  <ResultItem>
+    <tags>Action Co-op Multiplayer </tags>
+    <rating>48.242380261248186</rating>
+    <median>48</median>
+  </ResultItem>
+  <ResultItem>
+    <tags>Action Casual Indie </tags>
+    <rating>48.662280701754383</rating>
+    <median>48</median>
+  </ResultItem>
+  <ResultItem>
+    <tags>Adventure Casual Indie </tags>
+    <rating>48.85809312638581</rating>
+    <median>48</median>
+  </ResultItem>
+  <ResultItem>
+    <tags>Action Multiplayer Singleplayer </tags>
+    <rating>51.60171568627451</rating>
+    <median>52</median>
+  </ResultItem>
+  <ResultItem>
+    <tags>Adventure Indie Singleplayer </tags>
+    <rating>54.9448275862069</rating>
+    <median>58</median>
+  </ResultItem>
+  <ResultItem>
+    <tags>Action Adventure Singleplayer </tags>
+    <rating>55.105810928013874</rating>
+    <median>55</median>
+  </ResultItem>
+  <ResultItem>
+    <tags>Action Indie Singleplayer </tags>
+    <rating>55.542572463768117</rating>
+    <median>58</median>
+  </ResultItem>
+  <ResultItem>
+    <tags>Casual Indie Singleplayer </tags>
+    <rating>55.738031914893618</rating>
+    <median>58</median>
+  </ResultItem>
+  <ResultItem>
+    <tags>Action Atmospheric Singleplayer </tags>
+    <rating>56.703816793893132</rating>
+    <median>58</median>
+  </ResultItem>
+  <ResultItem>
+    <tags>Adventure Atmospheric Singleplayer </tags>
+    <rating>58.605757196495617</rating>
+    <median>60</median>
+  </ResultItem>
+  <ResultItem>
+    <tags>2D Action Indie </tags>
+    <rating>60.9427374301676</rating>
+    <median>66</median>
+  </ResultItem>
+  <ResultItem>
+    <tags>2D Indie Singleplayer </tags>
+    <rating>63.699582753824757</rating>
+    <median>69</median>
+  </ResultItem>
+  <ResultItem>
+    <tags>Great Soundtrack Indie Singleplayer </tags>
+    <rating>64.601173020527852</rating>
+    <median>69</median>
+  </ResultItem>
+  <ResultItem>
+    <tags>Action Great Soundtrack Singleplayer </tags>
+    <rating>64.759124087591246</rating>
+    <median>69</median>
+  </ResultItem>
+  <ResultItem>
+    <tags>Adventure Great Soundtrack Singleplayer </tags>
+    <rating>64.92307692307692</rating>
+    <median>69</median>
+  </ResultItem>
+</ArrayOfResultItem>
