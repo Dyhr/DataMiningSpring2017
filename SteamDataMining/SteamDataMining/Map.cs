@@ -77,10 +77,10 @@ public class Map
             {
                 sum += patterns[i][j];
             }
-            double average = sum / patterns.Count;
+            //double average = sum / patterns.Count;
             for (int i = 0; i < patterns.Count; i++)
             {
-                patterns[i][j] = patterns[i][j] / (average == 0 ? 1 : average);
+                patterns[i][j] = patterns[i][j] / (sum == 0 ? 1 : sum);
             }
         }
     }
