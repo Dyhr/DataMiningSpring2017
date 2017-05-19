@@ -91,11 +91,11 @@ namespace SteamDataMining
             var bitmap = new Bitmap(mapSize, mapSize);
             var colors = tags.Select((_, i) =>
             {
-                var c = (int) (i / (double)tags.Length) * 255;
+                var c = (int) (i / (double)tags.Length * 255);
                 return Color.FromArgb(c,c,c);
             }).ToArray();
             for(int i = 0; i < colors.Length; i++)
-                Console.WriteLine(string.Format("{0}: {1},{2},{3} - {4}", tags[i], colors[i].R, colors[i].G, colors[i].B, colors[i].Name));
+                Console.WriteLine($"{tags[i]}: {colors[i].R},{colors[i].G},{colors[i].B} - {colors[i].Name}");
             for (int x = 0; x < mapSize; x++)
             {
                 for (int y = 0; y < mapSize; y++)
@@ -109,7 +109,7 @@ namespace SteamDataMining
                 var pos = map.Winner(item);
                 var color = Color.FromArgb(rnd.Next() % 255, rnd.Next() % 255, rnd.Next() % 255);
                 bitmap.SetPixel(pos.Item1, pos.Item2, color);
-                Console.WriteLine(frequentData[i] + " " + color.Name);
+                Console.WriteLine(frequentData[i].name + " " + color.Name);
             }
             bitmap.Save("./SOM.png", ImageFormat.Png);
             Console.WriteLine("Done");
