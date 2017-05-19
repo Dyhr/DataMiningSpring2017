@@ -15,8 +15,7 @@ namespace SteamDataMining
             Console.WriteLine("Running Apriori using support threshold " + supportThreshold);
             int k;
             List<SortedSet<string>> supportedCandidates = new List<SortedSet<string>>();
-
-            //double pct = 100 * supportThreshold / data.Count;
+            
             int supportCount = (int) (supportThreshold * data.Count);
 
             Dictionary<SortedSet<string>, int> frequentItemSets = generateFrequentItemSetsLevel1(data, supportCount);

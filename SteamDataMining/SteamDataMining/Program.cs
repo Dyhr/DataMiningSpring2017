@@ -38,7 +38,7 @@ namespace SteamDataMining
             double threshold = 0.02;
             double confidence = 0.35;
 
-            var result = Apriori.MineItemSets(data.Select(x => x.tags.Keys.ToArray()).ToList(), threshold, 10,confidence, true);
+            var result = Apriori.MineItemSets(data.Select(x => x.tags.Keys.ToArray()).ToList(), threshold, 10,confidence, false);
 
             var resultMappedToRating = result.ToDictionary(r => SetAsString(r),
                 r => getAverage(data.Where(x => r.All(x.tags.Keys.Contains)))); //.Average(d => d.rank));
